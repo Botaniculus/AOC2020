@@ -1,67 +1,62 @@
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+
+
 public class Puzzle8{
 	public static void main(String[] args){
 		String[] input = Reader.read("input8");
 		Result res = runProgram(input);
 		System.out.println("Part 1: " + res.acc);
-		
+
 		Result res2 = part2(input);
 		System.out.println("Part 2: " + res2.acc);
 	}
-	public static Result part2(String[] input){
-	int index = 0;
-		boolean run = true;
+
+	public static Result part2(String[] input) {
 		String old = "";
-		Result res2;
-		
+		Result result = runProgram(input);
+
 		//if it is corrupted (infinite loop)
-		if(runProgram(input).infinite)
+		if(result.infinite)
 		{
-			// find instruction nop(/jmp) and replace it with jmp(/nop)
-			do
+
+			for(int index = 0; index<input.length; index++)
 			{
-				boolean found = false;
-				while(!found && index < input.length)
+
+				for(int i = index; i<input.length; i++) // step through instructions at and succeeding index to find any nop or jmp to replace
 				{
-					String op = input[index];
-					String[] opAndArgs = op.split(" ");
-					if(opAndArgs[0].equals("nop"))
-					{
-						found = true;
+					String opCode = input[i].split(" ")[0];
+					if(opCode.equals("nop")) {
+						index = i;
 						old = input[index];
 						input[index] = old.replace("nop", "jmp");
-					
-					} else if(opAndArgs[0].equals("jmp"))
-					{
-						found = true;
+						break;
+
+					} else if(opCode.equals("jmp")) {
+						index = i;
 						old = input[index];
 						input[index] = old.replace("jmp", "nop");
-					} else
-						index++;
-				}
-				res2 = runProgram(input);
-				if(!res2.infinite)
-				{
-					run = false; // stop if done
-					System.out.println("The source of the infinite loop was on line " + (index+1) +" : " +old+"\nSolution: " + old + " => " + input[index]);
-				}
-				else
-				{
-					input[index] = old; // insert old value because it didn't work
-				}
-				index++;
-			} while(run && index < input.length);
-		
-		//if it is not corrupted (has no infinite loop)
-		} else
-			res2 = runProgram(input);
-		
-		return res2;
-	}
+						break;
 
-	
+					}
+				}
+
+				result = runProgram(input); // try running it with replaced instruction
+				if(!result.infinite) {
+					System.out.println("The source of the infinite loop is on line " + (index+1) +": " +old);
+					System.out.println("Solution: " + old + " => " + input[index]);
+					break;
+				}
+
+				else
+					input[index] = old; // insert old value because it didn't work
+
+			}
+		}
+
+		return result;
+	}
 
 	public static Result runProgram(String[] input){
 		int accumulator=0;
@@ -69,7 +64,7 @@ public class Puzzle8{
 		Set<Integer> executedLines = new HashSet<Integer>();
 		int pc=0; // program counter
 		executedLines.add(pc);
-		
+
 		boolean run = true;
 		while(run)
 		{
@@ -78,15 +73,15 @@ public class Puzzle8{
 			String instruction = input[pc].split(" ")[0];
 			switch(instruction)
 			{
-				case "acc":				
+				case "acc":
 					accumulator+=((sign == '+') ? number : -number);
 					pc++;
 					break;
-	
+
 				case "jmp":
 					pc+=((sign == '+') ? number : -number);
 					break;
-					
+
 				case "nop":
 					pc++;
 					break;
@@ -104,12 +99,11 @@ public class Puzzle8{
 				toReturn.infinite = false; // it isn't corrupted
 				toReturn.acc = accumulator;
 			}
-		}	
+		}
 		return toReturn;
 	}
-	
-	private static class Result
-	{
+
+	private static class Result{
 		boolean infinite;
 		int acc;
 	}
