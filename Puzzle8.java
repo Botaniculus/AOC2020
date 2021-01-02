@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 public class Puzzle8{
 	public static void main(String[] args){
 		String[] input = Reader.read("input8");
@@ -62,35 +64,27 @@ public class Puzzle8{
 	
 
 	public static Result runProgram(String[] input){
-	int accumulator=0;
+		int accumulator=0;
 		Result toReturn = new Result();
-		
-		ArrayList<Integer> executedLines = new ArrayList<Integer>();
-		int pc=0;
+		Set<Integer> executedLines = new HashSet<Integer>();
+		int pc=0; // program counter
+		executedLines.add(pc);
 		
 		boolean run = true;
 		while(run)
 		{
-			executedLines.add(pc);
-			
 			int number = Integer.parseInt(input[pc].split(" ")[1].replace("+", "").replace("-",""));
 			char sign = input[pc].split(" ")[1].charAt(0);
 			String instruction = input[pc].split(" ")[0];
 			switch(instruction)
 			{
 				case "acc":				
-					if(sign == '+')
-						accumulator+=number;
-					else
-						accumulator-=number;
+					accumulator+=((sign == '+') ? number : -number);
 					pc++;
 					break;
 	
 				case "jmp":
-					if(sign == '+')
-						pc+=number;
-					else
-						pc-=number;	
+					pc+=((sign == '+') ? number : -number);
 					break;
 					
 				case "nop":
@@ -98,7 +92,7 @@ public class Puzzle8{
 					break;
 			}
 
-			if(executedLines.contains(pc))
+			if(!executedLines.add(pc)) // pc is cannot be added to set bcs set already contains it | otherwise add pc to set
 			{
 				run = false; // stop looping
 				toReturn.infinite = true; // it is corrupted (infinite)
