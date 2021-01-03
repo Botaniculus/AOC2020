@@ -9,7 +9,6 @@ class Reader{
             String line;
             while((line = br.readLine())!=null)
                 lines.add(line);
-            br.close();
 
         } catch(IOException e){ }
 
