@@ -3,6 +3,7 @@ import java.util.ArrayList;
 class Reader{
     public static String[] read(String filename){
         ArrayList<String> lines = new ArrayList<String>();
+        // omg this "try with resources" improves speed so much
         try(BufferedReader br = new BufferedReader(new FileReader("inputs/"+filename));)
         {
             String line;
