@@ -5,8 +5,8 @@ class Puzzle1{
 		String[] input = Reader.read("input1");
 		int result=0;
 		for(int i=0; i<input.length; i++){
-			for(int j=0; j<input.length; j++){
-				for(int k=0; k<input.length; k++){
+			for(int j=i+1; j<input.length; j++){
+				for(int k=j+1; k<input.length; k++){
 					int x = Integer.parseInt(input[i]);
 					int y = Integer.parseInt(input[j]);
 					int z = Integer.parseInt(input[k]);
@@ -14,7 +14,7 @@ class Puzzle1{
 						result = x * y * z;
 						break;
 					}
-					
+
 				}
 			}
 		}
