@@ -13,6 +13,20 @@ class Reader{
         } catch(IOException e){ }
 
         String[] data = lines.toArray(new String[]{});
+
         return data;
+    }
+    public static String readToString(String filename){
+      String lines="";
+
+      try(BufferedReader br = new BufferedReader(new FileReader("inputs/"+filename));)
+      {
+          String line;
+          while((line = br.readLine())!=null)
+              lines+=line+"\n";
+
+      } catch(IOException e){ }
+      
+      return lines;
     }
 }
