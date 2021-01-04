@@ -18,7 +18,7 @@ class Puzzle4{
 		return m.matches();
   }
 	public static void main(String[] args){
-		String textString = readString();
+		String textString = Reader.readToString("input4");
 		int finalCount=0;
 		String[] passports = textString.split("\n\n");
 
@@ -88,14 +88,5 @@ class Puzzle4{
 				count++;
 		}
 		return count;
-	}
-	public static String readString(){
-		String[] firstArray = Reader.read("input4");
-
-		String output="";
-		for(int s=0; s<firstArray.length; s++){
-			output+=firstArray[s] + "\n";
-		}
-		return output;
 	}
 }
