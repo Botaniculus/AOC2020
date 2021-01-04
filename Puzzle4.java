@@ -1,4 +1,6 @@
 import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 class Puzzle4{
 	public static boolean checkPid(String str){
@@ -17,76 +19,75 @@ class Puzzle4{
 
 		return m.matches();
   }
+
 	public static void main(String[] args){
 		String textString = Reader.readToString("input4");
-		int finalCount=0;
+		int validPassportsPart1=0;
+		int validPassportsPart2=0;
 		String[] passports = textString.split("\n\n");
 
-		//each passport
 		for(String passport : passports)
 		{
-			String[] data = passport.replace("\n", " ").split(" ");
-			int count=0;
+			String[] pairs = passport.replace("\n", " ").split(" "); // [name:value, name1:value1, name2:value2, ...]
+			int containedPairsCount=0;
+			int validPairsCount=0;
 
+			for(String pair : pairs){
+				int[] check = check(pair);
+				containedPairsCount += check[0];
+				validPairsCount += check[1];
 
-			//each data
-			for(int dataIndex=0; dataIndex<data.length; dataIndex++){
-				String[] finalData = data[dataIndex].split(":");
-				String title=finalData[0];
-				String value=finalData[1];
-
-				count += check(title, value);
 			}
 
-			if(count>=7)
-				finalCount++;
+			validPassportsPart1 += (containedPairsCount >= 7) ? 1 : 0;
+			validPassportsPart2 += (validPairsCount >= 7) ? 1 : 0;
 
 		}
-		System.out.println("Final count: " + finalCount);
 
+		System.out.println("Part 1: " + validPassportsPart1);
+		System.out.println("Part 2: " + validPassportsPart2);
 	}
-	public static int checkNumber(String value, int minimum, int maximum){
-		int year = Integer.parseInt(value);
-		if(year>=minimum && year<=maximum)
-			return 1;
-		else
-			return 0;
-	}
-	public static int check(String title, String value){
+
+	public static int[] check(String pair){
+		String title = pair.split(":")[0];
+		String value = pair.split(":")[1];
+		int part1=0;
 		int count=0;
 		if(title.equals("eyr")){
-			count+=checkNumber(value, 2020, 2030);
-
+			count+=(Integer.parseInt(value)>=2020 && Integer.parseInt(value)<=2030) ? 1 : 0;
+			part1++;
 		} else if(title.equals("iyr")){
-			count+=checkNumber(value, 2010, 2020);
-
+			count+=(Integer.parseInt(value)>=2010 && Integer.parseInt(value)<=2020) ? 1 : 0;
+			part1++;
 		} else if(title.equals("byr")){
-			count+=checkNumber(value, 1920, 2002);
-
+			count+=(Integer.parseInt(value)>=1920 && Integer.parseInt(value)<=2002) ? 1 : 0;
+			part1++;
 		} else if(title.equals("hcl")){
 			if(testColor(value) == true)
 				count++;
+			part1++;
 		} else if(title.equals("ecl")){
-			String[] array = {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
-			for(int col = 0; col<array.length; col++){
-				if(value.equals(array[col])){
-					count++;
-					break;
-				}
-			}
+			ArrayList<String> colors = new ArrayList<String>(Arrays.asList("amb", "blu", "brn", "gry", "grn", "hzl", "oth"));
+			if(colors.contains(value))
+				count++;
+			part1++;
+
 		} else if(title.equals("hgt")){
 			if(value.endsWith("m")){
-				String[] array = value.split("c");
-				count+=checkNumber(array[0], 150, 193);
+				int number = Integer.parseInt(value.split("c")[0]);
+				count+=(number>=150 && number<=193) ? 1 : 0;
 
 			} else{
-				String[] array = value.split("i");
-				count+=checkNumber(array[0], 59, 76);
+				int number = Integer.parseInt(value.split("i")[0]);
+				count+=(number>=59 && number<=76) ? 1 : 0;
 			}
+			part1++;
 		} else if(title.equals("pid")){
 			if(checkPid(value) == true)
 				count++;
+			part1++;
 		}
-		return count;
+
+		return new int[]{part1, count};
 	}
 }
