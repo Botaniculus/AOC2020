@@ -20,9 +20,11 @@ class Puzzle2{
 				char character = spaceSplitted[1].charAt(0);
 				String password = spaceSplitted[2];
 
+				// part1
 				if(countChars(password, character) >= min && countChars(password, character) <= max)
 					validPasswords1++;
 
+				// part2
 				if((password.charAt(min-1) == character || password.charAt(max-1) == character) && password.charAt(max-1) != password.charAt(min-1))
 					validPasswords2++;
 
@@ -31,6 +33,7 @@ class Puzzle2{
 		return toReturn;
 
 	}
+	
 	public static int countChars(String s, char character){
 		int count = 0;
 		for(char c : s.toCharArray()){
