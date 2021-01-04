@@ -16,7 +16,7 @@ class Puzzle6{
 				Set<Character> used = new HashSet<Character>();
 				for(char character : alphabetString.toCharArray()){
 					if(countChar(groupLine, character) == peopleCount) everyone++;
-					if(groupLine.contains(String.valueOf(character))) used.add(character);
+					if(groupLine.indexOf(character) != -1) used.add(character);
 				}
 				anyone+=used.size();
 			}
