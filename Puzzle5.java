@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+
 class Puzzle5{
 		public static void main(String[] args){
 			String[] input = Reader.read("input5");
