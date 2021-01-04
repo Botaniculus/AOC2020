@@ -1,35 +1,36 @@
+import java.util.Set;
+import java.util.HashSet;
+
 class Puzzle6{
 	final static String alphabetString = "abcdefghijklmnopqrstuvwxyz";
 		public static void main(String[] args){
 			String[] groups = Reader.readToString("input6").split("\n\n");
 
-			int count = 0;
-			for(int group = 0; group<groups.length; group++){
-				int peopleCount = (groups[group].split("\n")).length;
+			int everyone = 0;
+			int anyone = 0;
 
-				String groupLine = groups[group].replace("\n", "");
-				int groupCount = 0;
+			for(String group : groups){
+				int peopleCount = group.split("\n").length;
+				String groupLine = group.replace("\n", "");
 
-				for(int character=0; character<alphabetString.length(); character++){
-					if(countChar(groupLine, alphabetString.charAt(character)) == peopleCount){
-						count++;
-						groupCount++;
-					}
+				Set<Character> used = new HashSet<Character>();
+				for(char character : alphabetString.toCharArray()){
+					if(countChar(groupLine, character) == peopleCount) everyone++;
+					if(groupLine.contains(String.valueOf(character))) used.add(character);
 				}
+				anyone+=used.size();
 			}
-			System.out.println("Total matches: " +count);
+			System.out.println("Anyone: " +anyone);
+			System.out.println("Total matches: " +everyone);
 
 		}
 
 
 		public static int countChar(String str, char c) {
 			int count = 0;
-
-			for(int i=0; i < str.length(); i++)
-			{    if(str.charAt(i) == c)
-					count++;
+			for(int i=0; i < str.length(); i++){
+				if(str.charAt(i) == c) count++;
 			}
-
 			return count;
 		}
 
